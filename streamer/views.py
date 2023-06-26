@@ -1,8 +1,9 @@
 from django.http import HttpResponse, JsonResponse
+from django.core import serializers
 from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser
 from .models import Streamer
-from .serializers import StreamerSerializer
+from .serializers import StreamerSerializer, VoteStreamerSerializer
 from django.core.handlers.wsgi import WSGIRequest as Request
 
 
@@ -44,3 +45,19 @@ def streamer_details(request: Request, pk: int):
     elif request.method == 'DELETE':
         streamer.delete()
         return HttpResponse(status=204)
+
+
+@api_view(['PUT'])
+def streamer_vote(request: Request, pk: int):
+    try:
+        streamer = Streamer.objects.get(pk=pk)
+    except Streamer.DoesNotExist:
+        return HttpResponse(status=404)
+
+    data = JSONParser().parse(request)
+    serializer = VoteStreamerSerializer(data=data)
+    if serializer.is_valid():
+        streamer.vote(data['vote'])
+        streamer.save()
+        return HttpResponse(status=200)
+    return JsonResponse(serializer.errors, status=400)

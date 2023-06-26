@@ -5,4 +5,5 @@ from . import views
 urlpatterns = [
     path('', views.streamer_list),
     path('<int:pk>', views.streamer_details),
+    path('<int:pk>/vote', views.streamer_vote),
 ]

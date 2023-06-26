@@ -9,4 +9,12 @@ class Streamer(models.Model):
     upvote = models.IntegerField(default=0)
     downvote = models.IntegerField(default=0)
 
+    def vote(self, v):
+        match v:
+            case 'upvote':
+                self.upvote += 1
+            case 'downvote':
+                self.downvote += 1
+            case _:
+                raise ValueError('Vote invalid')
 # Create your models here.
