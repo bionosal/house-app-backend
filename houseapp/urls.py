@@ -20,4 +20,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('posts/', include('post.urls')),
+    path('streamers/', include('streamer.urls')),
 ]
